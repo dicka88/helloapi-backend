@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import jsonToFaker from '../../utils/jsonToFaker';
-import Apis, { Api, Endpoint } from '../models/Api';
+import Project, { ProjectInterface, Endpoint } from '../models/Project';
 
 type ApiRequest = FastifyRequest<{
   Params: {
@@ -20,9 +20,9 @@ export const getHandler = async (request: ApiRequest, reply: FastifyReply) => {
   };
 
   try {
-    const api = await Apis.findOne(filter) as Api;
+    const project = await Project.findOne(filter) as ProjectInterface;
 
-    const endpoint = api.endpoints.find((item: Endpoint) => item.path === path) as Endpoint;
+    const endpoint = project.endpoints.find((item: Endpoint) => item.path === path) as Endpoint;
     if (!endpoint) throw new Error('Endpoint not found');
 
     // if type is json then send json
@@ -92,7 +92,7 @@ export const putHandler = async (request: ApiRequest, reply: FastifyReply) => {
       'endpoints.path': path,
     };
 
-    const api = await Apis.findOne(filter);
+    const api = await Project.findOne(filter);
     const endpoint = api.endpoints.find((item: Endpoint) => item.path === path);
 
     const dataJson = JSON.parse(endpoint.data);
@@ -100,7 +100,7 @@ export const putHandler = async (request: ApiRequest, reply: FastifyReply) => {
 
     console.log({ mergeData });
 
-    await Apis.findOneAndUpdate(filter, {
+    await Project.findOneAndUpdate(filter, {
       $set: {
         'endpoints.$.data': JSON.stringify(mergeData),
       },
