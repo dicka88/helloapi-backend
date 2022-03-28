@@ -1,7 +1,7 @@
 import { FastifyPluginAsync } from 'fastify';
 import {
   getHandler, postHandler, putHandler, deleteHandler,
-} from '../app/controllers/ApiController';
+} from '../app/controllers/api.controller';
 
 const routes: FastifyPluginAsync = async (app): Promise<void> => {
   app.get('/:prefixPath/:path', {}, getHandler);
