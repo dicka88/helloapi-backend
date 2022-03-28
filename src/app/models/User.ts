@@ -8,7 +8,7 @@ export enum LoginType {
   GITHUB = 'GITHUB',
 }
 
-interface UserInterface {
+export interface UserInterface {
   name: string,
   email: string,
   emailVerifiedAt: Date,
