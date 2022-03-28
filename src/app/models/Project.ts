@@ -15,7 +15,8 @@ export interface Endpoint {
   createdAt: Date
 }
 
-export interface Api {
+export interface ProjectInterface {
+  id: string,
   userId: string,
   collaboratos: [string],
   projectName: string,
@@ -27,7 +28,7 @@ export interface Api {
   endpoints: Endpoint[],
 }
 
-const ApisSchema = new Schema({
+const ProjectSchema = new Schema({
   userId: {
     type: Types.ObjectId,
     ref: 'Users',
@@ -88,6 +89,6 @@ const ApisSchema = new Schema({
   }],
 });
 
-const Apis = mongoose.model('Api', ApisSchema);
+const Project = mongoose.model('Project', ProjectSchema);
 
-export default Apis;
+export default Project;
