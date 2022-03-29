@@ -2,12 +2,6 @@ import * as mongoose from 'mongoose';
 
 const { Schema } = mongoose;
 
-export enum LoginType {
-  EMAIL = 'EMAIL',
-  GOOGLE = 'GOOGLE',
-  GITHUB = 'GITHUB',
-}
-
 export interface UserInterface {
   name: string,
   email: string,
@@ -15,7 +9,18 @@ export interface UserInterface {
   password: string,
   passwordResetCode: string,
   avatarUrl: string,
-  loginType: LoginType
+  oauth: {
+    github: {
+      id: string,
+      name: string,
+      email: string
+    },
+    google: {
+      id: string,
+      name: string,
+      email: string,
+    }
+  }
 }
 
 const UserSchema = new Schema<UserInterface>({
@@ -31,9 +36,17 @@ const UserSchema = new Schema<UserInterface>({
   password: String,
   passwordResetCode: String,
   avatarUrl: String,
-  loginType: {
-    type: String,
-    enum: [LoginType.EMAIL, LoginType.GOOGLE, LoginType.GITHUB],
+  oauth: {
+    github: {
+      id: String,
+      name: String,
+      email: String,
+    },
+    google: {
+      id: String,
+      name: String,
+      email: String,
+    },
   },
 }, {
   timestamps: true,
