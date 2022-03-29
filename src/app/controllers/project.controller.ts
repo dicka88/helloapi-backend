@@ -79,7 +79,7 @@ export const updateProject = async (
 ) => {
   const { id } = request.user as JWTCredential;
   const { prefixPath } = request.params;
-  const { name } = request.body;
+  const { name, description } = request.body;
 
   try {
     const project = await Project.findOne({ prefixPath });
@@ -93,6 +93,7 @@ export const updateProject = async (
 
     await Project.findByIdAndUpdate(project.id, {
       projectName: name,
+      projectDescription: description,
     });
 
     return reply.send({ code: 200, message: 'update project' });
