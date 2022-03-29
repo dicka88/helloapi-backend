@@ -3,7 +3,7 @@ import * as mongoose from 'mongoose';
 import envConfig from '../config/env';
 import { hash } from '../utils/hash';
 
-import User, { LoginType } from '../app/models/User';
+import User from '../app/models/User';
 
 const generateUser = () => {
   const name = faker.name.firstName();
@@ -15,7 +15,6 @@ const generateUser = () => {
     password: hash(name),
     resetPassword: null,
     avatarUrl: null,
-    loginType: LoginType.EMAIL,
   };
 };
 
