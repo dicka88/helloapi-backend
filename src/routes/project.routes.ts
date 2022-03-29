@@ -15,9 +15,33 @@ const auth = {
 const routes: FastifyPluginAsync = async (app): Promise<void> => {
   app.get('/', auth, getAllProject);
   app.get('/:prefixPath', auth, getProject);
-  app.post('/:prefixPath', auth, createProject);
+  app.post('/:prefixPath', {
+    ...auth,
+    schema: {
+      body: {
+        type: 'object',
+        required: ['name'],
+        properties: {
+          name: { type: 'string' },
+          description: { type: 'string' },
+        },
+      },
+    },
+  }, createProject);
   app.post('/:prefixPath/generate_key', auth, generateKey);
-  app.put('/:prefixPath', auth, updateProject);
+  app.put('/:prefixPath', {
+    ...auth,
+    schema: {
+      body: {
+        type: 'object',
+        required: ['name'],
+        properties: {
+          name: { type: 'string' },
+          description: { type: 'string' },
+        },
+      },
+    },
+  }, updateProject);
   app.delete('/:prefixPath', auth, deleteProject);
 
   app.post('/:prefixPath/endpoint', auth, createEndpoint);
