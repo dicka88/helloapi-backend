@@ -20,7 +20,12 @@ export const getHandler = async (request: ApiRequest, reply: FastifyReply) => {
   };
 
   try {
-    const project = await Project.findOne(filter) as ProjectInterface;
+    const project = await Project.findOneAndUpdate(filter, {
+      $inc: {
+        hitTotal: 1,
+        'endpoints.$.hit': 1,
+      },
+    }) as ProjectInterface;
 
     const endpoint = project.endpoints.find((item: Endpoint) => item.path === path) as Endpoint;
     if (!endpoint) throw new Error('Endpoint not found');
