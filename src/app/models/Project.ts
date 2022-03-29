@@ -69,6 +69,7 @@ const ProjectSchema = new Schema({
     },
     path: {
       type: String,
+      unique: true,
       required: true,
     },
     type: {
