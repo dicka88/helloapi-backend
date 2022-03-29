@@ -1,4 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
+import { hash, compare } from '../../utils/hash';
 
 import { jwtSign, jwtVerify } from '../../utils/jwt';
 import User from '../models/User';
@@ -36,7 +37,7 @@ export const signin = async (request: SigninRequest, replay: FastifyReply) => {
     });
   }
 
-  const isMatch = user.password === password;
+  const isMatch = compare(password, user.password);
 
   if (!isMatch) {
     return replay.code(401).send({
@@ -70,10 +71,12 @@ export const signup = async (request: SignupRequest, replay: FastifyReply) => {
     });
   }
 
+  const hashedPassword = hash(password);
+
   const newUser = new User({
     name,
     email,
-    password,
+    password: hashedPassword,
   });
 
   await newUser.save();
