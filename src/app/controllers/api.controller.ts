@@ -26,8 +26,8 @@ export const getHandler = async (request: ApiRequest, reply: FastifyReply) => {
     if (!endpoint) throw new Error('Endpoint not found');
 
     // if type is json then send json
-    if (endpoint.type === 'json') {
-      const json = JSON.parse(endpoint.data);
+    if (endpoint.type === 'json' && typeof endpoint.data === 'string') {
+      const json = JSON.parse(endpoint.data as string);
 
       return reply.send(json);
     }
@@ -51,8 +51,6 @@ export const getHandler = async (request: ApiRequest, reply: FastifyReply) => {
 
     return reply.send(endpoint.data);
   } catch (err) {
-    console.log(err);
-
     return reply.code(404).send({
       message: 'Resource is not found',
     });
