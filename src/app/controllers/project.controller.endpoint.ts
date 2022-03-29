@@ -21,8 +21,21 @@ export const createEndpoint = async (request: any, reply: FastifyReply) => {
   } = request.body;
 
   try {
-    const project = await Project.updateOne({ prefixPath, userId: id }, {
-      $push: {
+    const existEndpoint = await Project.exists({
+      userId: id,
+      prefixPath,
+      'endpoints.path': path,
+    });
+
+    if (existEndpoint) {
+      return reply.code(400).send({
+        code: 400,
+        message: 'Endpoint with path already exists',
+      });
+    }
+
+    await Project.updateOne({ prefixPath, userId: id }, {
+      $addToSet: {
         endpoints: {
           name,
           description,
@@ -35,7 +48,19 @@ export const createEndpoint = async (request: any, reply: FastifyReply) => {
       },
     });
 
-    return reply.code(201).send(project);
+    return reply.code(201).send({
+      code: 200,
+      message: 'Success added endpoint',
+      endpoint: {
+        name,
+        description,
+        method,
+        path,
+        type,
+        schema,
+        data,
+      },
+    });
   } catch (err) {
     return reply.code(400).send(err);
   }
