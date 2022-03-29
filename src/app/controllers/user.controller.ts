@@ -1,4 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
+import { hash } from '../../utils/hash';
 import { FastifyRequestAuth, JWTCredential } from '../middlewares/auth.middleware';
 import User, { UserInterface } from '../models/User';
 
@@ -7,9 +8,7 @@ export const getUser = async (request: FastifyRequestAuth, reply: FastifyReply) 
 
   const user = await User.findById(id).select('-password') as UserInterface;
 
-  reply.send({
-    user,
-  });
+  reply.send(user);
 };
 
 interface FastifyUserRequest extends FastifyRequestAuth {
@@ -33,6 +32,11 @@ export const putUser = async (
 ) => {
   const { id } = request.user as JWTCredential;
   const { name } = request.body;
+
+  await User.findByIdAndUpdate(id, {
+    name,
+  });
+
   reply.send({
     id,
     name,
@@ -49,8 +53,23 @@ type FastifyChangePassword = FastifyRequest<{
 
 export const changePassword = async (request: FastifyChangePassword, reply: FastifyReply) => {
   const { password, passwordConfirmation } = request.body;
+
+  if (password !== passwordConfirmation) {
+    return reply.code(400).send({
+      code: 400,
+      message: 'Password confirmation is not same',
+    });
+  }
+
+  const hashedPassword = hash(password);
+
+  await User.findByIdAndUpdate(id, {
+    password: hashedPassword,
+  });
+
   return reply.send({
-    message: 'Its work',
+    code: 200,
+    message: 'Password has been changed',
   });
 };
 
