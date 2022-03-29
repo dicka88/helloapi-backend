@@ -44,14 +44,8 @@ export const putUser = async (
   });
 };
 
-type FastifyChangePassword = FastifyRequest<{
-  Body: {
-    password: string,
-    passwordConfirmation: string
-  }
-}>
-
-export const changePassword = async (request: FastifyChangePassword, reply: FastifyReply) => {
+export const changePassword = async (request: any, reply: FastifyReply) => {
+  const { id } = request.user as JWTCredential;
   const { password, passwordConfirmation } = request.body;
 
   if (password !== passwordConfirmation) {
