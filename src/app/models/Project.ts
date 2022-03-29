@@ -10,7 +10,7 @@ export interface Endpoint {
   type: 'faker' | 'json',
   schema: object | Array<any>,
   count: number,
-  data: string,
+  data: object | string | Array<any>,
   hit: number,
   createdAt: Date
 }
@@ -74,10 +74,11 @@ const ProjectSchema = new Schema({
     type: {
       type: String,
       enum: ['json', 'faker'],
+      default: 'json',
     },
-    schema: Schema.Types.Mixed,
+    schema: Object,
     count: Number,
-    data: String,
+    data: Schema.Types.Mixed,
     hit: {
       type: Number,
       default: 0,
