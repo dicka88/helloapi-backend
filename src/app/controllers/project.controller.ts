@@ -29,7 +29,7 @@ export const getProject = async (request: any, reply: FastifyReply) => {
     const { id } = request.user as JWTCredential;
     const { prefixPath } = request.params;
 
-    const project = await Project.findOne({ userId: id, prefixPath }).select('-endpoints');
+    const project = await Project.findOne({ userId: id, prefixPath });
 
     return reply.send(project);
   } catch (err: any) {
