@@ -25,6 +25,20 @@
         "@typescript-eslint"
     ],
     "rules": {
+        "import/no-extraneous-dependencies": [
+            "error",
+            {
+                "devDependencies": [
+                    "**/*.test.ts",
+                    "**/*.test.tsx",
+                    "**/*.spec.ts",
+                    "**/*.spec.tsx",
+                    "**/*.stories.tsx",
+                    "**/*.stories.ts",
+                    "**/*.d.ts"
+                ]
+            }
+        ],
         "import/extensions": [
             "error",
             "ignorePackages",
