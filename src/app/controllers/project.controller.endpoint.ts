@@ -29,7 +29,7 @@ export const createEndpoint = async (request: any, reply: FastifyReply) => {
 
     if (existEndpoint) {
       return reply.code(400).send({
-        code: 400,
+        statusCode: 400,
         message: 'Endpoint with path already exists',
       });
     }
@@ -49,7 +49,7 @@ export const createEndpoint = async (request: any, reply: FastifyReply) => {
     });
 
     return reply.code(201).send({
-      code: 200,
+      statusCode: 200,
       message: 'Success added endpoint',
       endpoint: {
         name,
@@ -88,7 +88,7 @@ export const getEndpoint = async (request: any, reply: FastifyReply) => {
     return reply.code(200).send(endpoint);
   } catch (err: any) {
     return reply.code(400).send({
-      code: 400,
+      statusCode: 400,
       message: err.message,
     });
   }
@@ -132,7 +132,7 @@ export const updateEndpoint = async (request: any, reply: FastifyReply) => {
     });
 
     return reply.send({
-      code: 200,
+      statusCode: 200,
       message: 'Endpoint updated',
     });
   } catch (err: any) {
@@ -157,7 +157,7 @@ export const deleteEndpoint = async (request: any, reply: FastifyReply) => {
   });
 
   return reply.send({
-    code: 200,
+    statusCode: 200,
     message: 'Endpoint has been deleted',
   });
 };

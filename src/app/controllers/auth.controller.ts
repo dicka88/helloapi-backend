@@ -32,7 +32,7 @@ export const signin = async (request: SigninRequest, replay: FastifyReply) => {
 
   if (!user) {
     return replay.code(404).send({
-      code: 404,
+      statusCode: 404,
       message: 'User not is found',
     });
   }
@@ -41,7 +41,7 @@ export const signin = async (request: SigninRequest, replay: FastifyReply) => {
 
   if (!isMatch) {
     return replay.code(401).send({
-      code: 401,
+      statusCode: 401,
       message: 'Email or password is incorrect',
     });
   }
@@ -67,32 +67,36 @@ export const signup = async (request: SignupRequest, replay: FastifyReply) => {
 
   if (user) {
     return replay.code(409).send({
+      statusCode: 409,
       message: 'User already exists',
     });
   }
 
-  const hashedPassword = hash(password);
+  try {
+    const hashedPassword = hash(password);
 
-  const newUser = new User({
-    name,
-    email,
-    password: hashedPassword,
-  });
+    const newUser = new User({
+      name,
+      email,
+      password: hashedPassword,
+    });
 
-  await newUser.save();
+    await newUser.save();
 
-  const token = jwtSign({
-    name: newUser.name,
-    email,
-  });
+    const token = jwtSign({
+      name: newUser.name,
+      email,
+    });
 
-  const decoded = jwtVerify(token);
-
-  console.log(decoded);
-
-  return replay.send({
-    token,
-  });
+    return replay.send({
+      token,
+    });
+  } catch (err: any) {
+    return replay.code(400).send({
+      statusCode: 400,
+      message: err.message,
+    });
+  }
 };
 
 export const verify = async (request: VerifyRequest, replay: FastifyReply) => {

@@ -50,7 +50,7 @@ export const changePassword = async (request: any, reply: FastifyReply) => {
 
   if (password !== passwordConfirmation) {
     return reply.code(400).send({
-      code: 400,
+      statusCode: 400,
       message: 'Password confirmation is not same',
     });
   }
@@ -62,7 +62,7 @@ export const changePassword = async (request: any, reply: FastifyReply) => {
   });
 
   return reply.send({
-    code: 200,
+    statusCode: 200,
     message: 'Password has been changed',
   });
 };

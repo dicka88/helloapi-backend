@@ -15,7 +15,7 @@ export const getAllProject = async (request: FastifyRequestAuth, reply: FastifyR
   const projects = await Project.find({ userId: id }).select('-endpoints');
 
   reply.send({
-    code: 200,
+    statusCode: 200,
     data: projects,
   });
 };
@@ -34,7 +34,7 @@ export const getProject = async (request: any, reply: FastifyReply) => {
     return reply.send(project);
   } catch (err: any) {
     return reply.send({
-      code: 500,
+      statusCode: 500,
       message: err.message,
     });
   }
@@ -86,7 +86,7 @@ export const updateProject = async (
 
     if (project.userId.toString() !== id) {
       return reply.code(401).send({
-        code: 401,
+        statusCode: 401,
         message: 'Unauthorize to update this project',
       });
     }
@@ -96,7 +96,7 @@ export const updateProject = async (
       projectDescription: description,
     });
 
-    return reply.send({ code: 200, message: 'update project' });
+    return reply.send({ statusCode: 200, message: 'update project' });
   } catch (err) {
     return reply.code(404).send({
       message: 'Project is not found',
@@ -121,7 +121,7 @@ export const deleteProject = async (
       prefixPath,
     });
 
-    return reply.send({ code: 200, message: 'Delete project success' });
+    return reply.send({ statusCode: 200, message: 'Delete project success' });
   } catch (err) {
     return reply.code(400).send({
       message: "Project doesn't exist",
@@ -144,7 +144,7 @@ export const generateKey = async (request: any, replay: FastifyReply) => {
   });
 
   return replay.send({
-    code: 200,
+    statusCode: 200,
     apiKey,
   });
 };

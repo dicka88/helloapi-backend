@@ -27,7 +27,7 @@ const authMiddleware = (req: FastifyRequestAuth, rep: FastifyReply, next: Functi
     return next();
   } catch (err) {
     return rep.code(401).send({
-      code: 401,
+      statusCode: 401,
       message: 'Unauthorized',
     });
   }

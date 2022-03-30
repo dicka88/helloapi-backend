@@ -19,8 +19,9 @@ const routes: FastifyPluginAsync = async (app): Promise<void> => {
     schema: {
       body: {
         type: 'object',
-        required: ['email', 'password', 'retypePassword'],
+        required: ['name', 'email', 'password', 'retypePassword'],
         properties: {
+          name: { type: 'string' },
           email: { type: 'string' },
           password: { type: 'string' },
           retypePassword: { type: 'string' },

@@ -32,7 +32,7 @@ const build = (props = {}) => {
   app.register(projectRoutes, { prefix: '/project' });
 
   app.get('*', async (request, replay) => replay.code(404).send({
-    code: 404,
+    statusCode: 404,
     message: 'Resource is not found',
   }));
 
