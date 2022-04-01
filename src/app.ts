@@ -1,6 +1,7 @@
 import fastify from 'fastify';
 // import fastyMongdb from 'fastify-mongodb';
 import * as mongoose from 'mongoose';
+import fastifyCors from 'fastify-cors';
 
 import envConfig from './config/env';
 
@@ -11,6 +12,11 @@ import projectRoutes from './routes/project.routes';
 
 const build = (props = {}) => {
   const app = fastify(props);
+
+  // CORS
+  app.register(fastifyCors, {
+    origin: '*',
+  });
 
   // mongodb plugin setup
   // app.register(fastyMongdb, {
