@@ -15,7 +15,7 @@ const auth = {
 const routes: FastifyPluginAsync = async (app): Promise<void> => {
   app.get('/', auth, getAllProject);
   app.get('/:prefixPath', auth, getProject);
-  app.post('/:prefixPath', {
+  app.post('/', {
     ...auth,
     schema: {
       body: {
