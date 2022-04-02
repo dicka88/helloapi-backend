@@ -23,7 +23,8 @@
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
     "mongoose": "^6.2.8",
-    "pino": "^7.9.2"
+    "pino": "^7.9.2",
+    "short-hash": "^1.0.0"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^8.5.8",
