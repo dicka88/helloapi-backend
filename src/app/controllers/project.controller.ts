@@ -4,6 +4,7 @@ import { FastifyRequestAuth, JWTCredential } from '../middlewares/auth.middlewar
 import Project from '../models/Project';
 
 const md5 = require('md5');
+const shorthash = require('short-hash');
 
 /**
  * Done: yes
@@ -12,7 +13,7 @@ const md5 = require('md5');
 export const getAllProject = async (request: FastifyRequestAuth, reply: FastifyReply) => {
   const { id } = request.user as JWTCredential;
 
-  const projects = await Project.find({ userId: id }).select('-endpoints');
+  const projects = await Project.find({ userId: id }).select('-endpoints -apiKey');
 
   reply.send({
     statusCode: 200,
@@ -51,22 +52,26 @@ export const createProject = async (
   const { id } = request.user as JWTCredential;
   const { name, description } = request.body;
 
-  const prefixPath = md5(`${name}${Date.now()}`);
+  const prefixPath = shorthash(`${name}${Date.now()}`);
   const apiKey = md5(`${prefixPath}${Date.now()}`);
 
-  const project = new Project({
-    userId: id,
-    projectName: name,
-    projectDescription: description,
-    prefixPath,
-    apiKey,
-  });
+  try {
+    const project = await Project.create({
+      userId: id,
+      projectName: name,
+      projectDescription: description,
+      prefixPath,
+      apiKey,
+      endpoints: [],
+    });
 
-  await project.save();
-
-  reply.send({
-    project,
-  });
+    return reply.send(project);
+  } catch (err: any) {
+    return reply.code(500).send({
+      statusCode: 500,
+      message: err.message,
+    });
+  }
 };
 
 /**
