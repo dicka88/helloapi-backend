@@ -68,7 +68,7 @@ export const signup = async (request: SignupRequest, replay: FastifyReply) => {
   if (user) {
     return replay.code(409).send({
       statusCode: 409,
-      message: 'User already exists',
+      message: 'User with email already exists',
     });
   }
 
