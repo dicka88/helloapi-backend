@@ -49,7 +49,7 @@ const ProjectSchema = new Schema({
   },
   prefixPath: {
     type: String,
-    unique: true,
+    // unique: true,
     lowercase: true,
   },
   hitTotal: {
@@ -66,10 +66,11 @@ const ProjectSchema = new Schema({
       type: String,
       enum: ['GET', 'POST', 'PUT', 'DELETE'],
       required: true,
+      default: 'GET',
     },
     path: {
       type: String,
-      unique: true,
+      // unique: true,
       required: true,
     },
     type: {
@@ -84,11 +85,16 @@ const ProjectSchema = new Schema({
       type: Number,
       default: 0,
     },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
   }],
+}, {
+  timestamps: true,
+});
+
+ProjectSchema.index({ endpoints: 1 }, {
+  unique: true,
+  partialFilterExpression: {
+    'endpoints.0': { $exists: true },
+  },
 });
 
 const Project = mongoose.models.Project || mongoose.model('Project', ProjectSchema);
