@@ -49,7 +49,7 @@ export const createEndpoint = async (request: any, reply: FastifyReply) => {
     });
 
     return reply.code(201).send({
-      statusCode: 200,
+      statusCode: 201,
       message: 'Success added endpoint',
       endpoint: {
         name,
