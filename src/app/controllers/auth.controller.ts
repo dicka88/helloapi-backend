@@ -50,6 +50,7 @@ export const signin = async (request: SigninRequest, replay: FastifyReply) => {
     id: user.id,
     name: user.name,
     email: user.email,
+    emailVerifiedAt: user.emailVerifiedAt,
   };
 
   const token = jwtSign(credential);
