@@ -1,12 +1,12 @@
 {
   "scripts": {
+    "start": "yarn run clean && tsc-watch --onSuccess \"node dist/server.js\"",
     "build": "tsc -p tsconfig.json",
     "test": "mocha ./dist/tests/**/*.test.js",
     "test-watch": "mocha ./dist/tests/**/*.test.js --watch",
     "seed": "node ./dist/seeds/apisSeed.js",
     "lint": "eslint ./src/**/*.ts",
-    "clean": "rm -rf dist",
-    "start": "yarn run clean && tsc-watch --onSuccess \"node dist/server.js\""
+    "clean": "rm -rf dist"
   },
   "dependencies": {
     "@faker-js/faker": "^6.0.0",
