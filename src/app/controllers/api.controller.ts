@@ -1,6 +1,8 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
+import * as _ from 'lodash';
+
 import jsonToFaker from '../../utils/jsonToFaker';
-import Project, { ProjectInterface, Endpoint } from '../models/Project';
+import Project, { ProjectInterface, Endpoint, EndpointSchema } from '../models/Project';
 
 type ApiRequest = FastifyRequest<{
   Params: {
@@ -28,6 +30,7 @@ export const getHandler = async (request: ApiRequest, reply: FastifyReply) => {
     }) as ProjectInterface;
 
     const endpoint = project.endpoints.find((item: Endpoint) => item.path === path) as Endpoint;
+
     if (!endpoint) throw new Error('Endpoint not found');
 
     // if type is json then send json
@@ -39,19 +42,27 @@ export const getHandler = async (request: ApiRequest, reply: FastifyReply) => {
 
     // if type is faker then generate data with faker
     if (endpoint.type === 'faker') {
+      const { schema } = endpoint;
+
+      let schemaParsed = {};
+
+      if (Array.isArray(schema)) {
+        schemaParsed = _.chain(schema).keyBy('key').mapValues('value').value() as EndpointSchema;
+      } else {
+        schemaParsed = schema;
+      }
+
       // make an array
       if (endpoint.count > 0) {
-        const json = Array.from({ length: endpoint.count }, () => jsonToFaker(endpoint.schema));
+        const json = Array.from({ length: endpoint.count }, () => jsonToFaker(schemaParsed));
 
         return reply.send(json);
       }
 
       // make a single object
-      if (typeof endpoint.schema === 'object') {
-        const json = jsonToFaker(endpoint.schema);
+      const json = jsonToFaker(schemaParsed);
 
-        return reply.send(json);
-      }
+      return reply.send(json);
     }
 
     return reply.send(endpoint.data);

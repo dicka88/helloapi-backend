@@ -2,13 +2,17 @@ import * as mongoose from 'mongoose';
 
 const { Schema, Types } = mongoose;
 
+export type EndpointSchema = {
+  key: string,
+  value: string
+}
 export interface Endpoint {
   name: string,
   description: string,
   method: 'GET' | 'POST' | 'PUT' | 'DELETE',
   path: string,
   type: 'faker' | 'json',
-  schema: object | Array<any>,
+  schema: EndpointSchema[],
   count: number,
   data: object | string | Array<any>,
   hit: number,
@@ -27,6 +31,45 @@ export interface ProjectInterface {
   hitTotal: number,
   endpoints: Endpoint[],
 }
+
+const endpointFakerSchemaSchema = new Schema({
+  key: String,
+  value: String,
+});
+
+const endpointsSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  description: String,
+  method: {
+    type: String,
+    enum: ['GET', 'POST', 'PUT', 'DELETE'],
+    required: true,
+    default: 'GET',
+  },
+  path: {
+    type: String,
+    // unique: true,
+    required: true,
+  },
+  type: {
+    type: String,
+    enum: ['json', 'faker'],
+    default: 'json',
+  },
+  schema: {
+    type: Array,
+    default: [],
+  },
+  count: Number,
+  data: Schema.Types.Mixed,
+  hit: {
+    type: Number,
+    default: 0,
+  },
+});
 
 const ProjectSchema = new Schema({
   userId: {
@@ -56,36 +99,7 @@ const ProjectSchema = new Schema({
     type: Number,
     default: 0,
   },
-  endpoints: [{
-    name: {
-      type: String,
-      required: true,
-    },
-    description: String,
-    method: {
-      type: String,
-      enum: ['GET', 'POST', 'PUT', 'DELETE'],
-      required: true,
-      default: 'GET',
-    },
-    path: {
-      type: String,
-      // unique: true,
-      required: true,
-    },
-    type: {
-      type: String,
-      enum: ['json', 'faker'],
-      default: 'json',
-    },
-    schema: Object,
-    count: Number,
-    data: Schema.Types.Mixed,
-    hit: {
-      type: Number,
-      default: 0,
-    },
-  }],
+  endpoints: [endpointsSchema],
 }, {
   timestamps: true,
 });
