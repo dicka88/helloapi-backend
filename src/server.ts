@@ -4,7 +4,7 @@ import app from './app';
 
 const server = app({
   logger: pino({
-    level: 'info',
+    level: 'debug',
   }),
 });
 
