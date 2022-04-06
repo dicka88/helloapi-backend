@@ -12,9 +12,10 @@ export const createEndpoint = async (request: any, reply: FastifyReply) => {
   const { prefixPath } = request.params;
   const {
     name,
-    description,
-    method,
+    description = '',
+    method = 'GET',
     path,
+    count,
     type = 'json',
     schema,
     data,
@@ -35,12 +36,13 @@ export const createEndpoint = async (request: any, reply: FastifyReply) => {
     }
 
     await Project.updateOne({ prefixPath, userId: id }, {
-      $addToSet: {
+      $push: {
         endpoints: {
           name,
           description,
           method,
           path,
+          count,
           type,
           schema,
           data,
