@@ -2,7 +2,7 @@ import type { FastifyPluginAsync } from 'fastify';
 
 import {
   createEndpoint, deleteEndpoint, getEndpoint, updateEndpoint,
-} from '../app/controllers/project.controller.endpoint';
+} from '../app/controllers/project.endpoints.controller';
 import authMiddleware from '../app/middlewares/auth.middleware';
 import {
   getAllProject, getProject, updateProject, deleteProject, createProject, generateKey,
