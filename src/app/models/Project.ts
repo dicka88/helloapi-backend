@@ -19,7 +19,7 @@ export interface Endpoint {
   createdAt: Date
 }
 
-export interface ProjectInterface {
+export interface ProjectInterface extends mongoose.Document {
   id: string,
   userId: string,
   collaboratos: [string],
@@ -31,11 +31,6 @@ export interface ProjectInterface {
   hitTotal: number,
   endpoints: Endpoint[],
 }
-
-const endpointFakerSchemaSchema = new Schema({
-  key: String,
-  value: String,
-});
 
 const endpointsSchema = new Schema({
   name: {
@@ -111,6 +106,6 @@ ProjectSchema.index({ endpoints: 1 }, {
   },
 });
 
-const Project = mongoose.models.Project || mongoose.model('Project', ProjectSchema);
+const Project = mongoose.models.Project || mongoose.model<ProjectInterface>('Project', ProjectSchema);
 
 export default Project;

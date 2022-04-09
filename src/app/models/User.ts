@@ -2,7 +2,7 @@ import * as mongoose from 'mongoose';
 
 const { Schema } = mongoose;
 
-export interface UserInterface {
+export interface UserInterface extends mongoose.Document {
   name: string,
   email: string,
   emailVerifiedAt: Date,
