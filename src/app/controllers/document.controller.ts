@@ -122,8 +122,6 @@ export const putDocument = async (request: any, reply: FastifyReply) => {
   const { id: documentId } = request.params;
   const { content, title } = request.body;
 
-  console.log(content);
-
   try {
     const document = await Document.findById<DocumentInterface>(documentId);
 
@@ -138,6 +136,33 @@ export const putDocument = async (request: any, reply: FastifyReply) => {
       return reply.code(401).send({
         code: 401,
         message: 'Unauthorized',
+      });
+    }
+
+    document.title = title;
+    document.content = content;
+    await document.save();
+
+    return reply.send(document);
+  } catch (err: any) {
+    return reply.send({
+      statusCode: 500,
+      message: err.message,
+    });
+  }
+};
+
+export const putPublicDocument = async (request: any, reply: FastifyReply) => {
+  const { id: documentId } = request.params;
+  const { content, title } = request.body;
+
+  try {
+    const document = await Document.findById<DocumentInterface>(documentId);
+
+    if (!document) {
+      return reply.code(404).send({
+        code: 404,
+        message: 'Document not found',
       });
     }
 

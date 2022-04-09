@@ -8,6 +8,7 @@ import {
   deleteDocument,
   postPublicDocument,
   getPublicDocument,
+  putPublicDocument,
 } from '../app/controllers/document.controller';
 
 const auth = {
@@ -23,6 +24,7 @@ const routes: FastifyPluginAsync = async (app): Promise<void> => {
 
   app.post('/public', {}, postPublicDocument);
   app.get('/public/:id', {}, getPublicDocument);
+  app.put('/public/:id', {}, putPublicDocument);
 };
 
 export default routes;
