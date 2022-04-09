@@ -85,10 +85,10 @@ export const signup = async (request: SignupRequest, replay: FastifyReply) => {
     await newUser.save();
 
     const token = jwtSign({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      emailVerifiedAt: user.emailVerifiedAt,
+      id: newUser.id,
+      name: newUser.name,
+      email: newUser.email,
+      emailVerifiedAt: newUser.emailVerifiedAt,
     });
 
     return replay.send({
