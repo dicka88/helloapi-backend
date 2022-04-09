@@ -33,7 +33,7 @@ export const signin = async (request: SigninRequest, replay: FastifyReply) => {
   if (!user) {
     return replay.code(404).send({
       statusCode: 404,
-      message: 'User not is found',
+      message: "User with email isn't registered",
     });
   }
 
@@ -85,8 +85,10 @@ export const signup = async (request: SignupRequest, replay: FastifyReply) => {
     await newUser.save();
 
     const token = jwtSign({
-      name: newUser.name,
-      email,
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      emailVerifiedAt: user.emailVerifiedAt,
     });
 
     return replay.send({
