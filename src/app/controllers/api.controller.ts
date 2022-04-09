@@ -1,8 +1,10 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import * as _ from 'lodash';
+import * as mongoose from 'mongoose';
 
 import jsonToFaker from '../../utils/jsonToFaker';
 import Project, { ProjectInterface, Endpoint, EndpointSchema } from '../models/Project';
+import Document, { DocumentInterface } from '../models/Document';
 
 type ApiRequest = FastifyRequest<{
   Params: {
@@ -13,6 +15,26 @@ type ApiRequest = FastifyRequest<{
     payload: any
   }
 }>
+
+export const getDocumentHandler = async (request: any, reply: FastifyReply): Promise<void> => {
+  const { id } = request.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return reply.code(400).send({
+      code: '400',
+      error: 'Invalid id',
+    });
+  }
+
+  const document = await Document.findById(id) as DocumentInterface;
+
+  if (!document) {
+    reply.code(404).send({
+      message: 'Document not found',
+    });
+  }
+  reply.code(200).send(document.content);
+};
 
 export const getHandler = async (request: ApiRequest, reply: FastifyReply) => {
   const { prefixPath, path } = request.params;

@@ -9,6 +9,7 @@ import userRoutes from './routes/user.routes';
 import authRoutes from './routes/auth.routes';
 import apiRoutes from './routes/api.routes';
 import projectRoutes from './routes/project.routes';
+import documentRoutes from './routes/document.routes';
 
 const build = (props = {}) => {
   const app = fastify(props);
@@ -35,6 +36,7 @@ const build = (props = {}) => {
   app.register(authRoutes, { prefix: '/auth' });
   app.register(userRoutes, { prefix: '/user' });
   app.register(apiRoutes, { prefix: '/api' });
+  app.register(documentRoutes, { prefix: '/documents' });
   app.register(projectRoutes, { prefix: '/project' });
 
   app.get('*', async (request, replay) => replay.code(404).send({
