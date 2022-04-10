@@ -13,12 +13,14 @@ export interface UserInterface extends mongoose.Document {
     github: {
       id: string,
       name: string,
-      email: string
+      email: string,
+      avatar: string
     },
     google: {
       id: string,
       name: string,
       email: string,
+      avatar: string
     }
   }
 }
@@ -30,7 +32,6 @@ const UserSchema = new Schema<UserInterface>({
   },
   email: {
     type: String,
-    required: true,
   },
   emailVerifiedAt: Date,
   password: String,
@@ -41,11 +42,13 @@ const UserSchema = new Schema<UserInterface>({
       id: String,
       name: String,
       email: String,
+      avatar: String,
     },
     google: {
       id: String,
       name: String,
       email: String,
+      avatar: String,
     },
   },
 }, {

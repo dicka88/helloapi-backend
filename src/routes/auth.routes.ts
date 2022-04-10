@@ -1,5 +1,6 @@
 import { FastifyPluginAsync } from 'fastify';
 import { signin, signup, verify } from '../app/controllers/auth.controller';
+import { googleSignin, googleSignup } from '../app/controllers/auth.google.controller';
 
 const routes: FastifyPluginAsync = async (app): Promise<void> => {
   app.post('/signin', {
@@ -31,6 +32,12 @@ const routes: FastifyPluginAsync = async (app): Promise<void> => {
   }, signup);
 
   app.post('/verify', {}, verify);
+
+  app.post('/google/signin', {}, googleSignin);
+  app.post('/google/signup', {}, googleSignup);
+
+  app.post('/github/signin', {}, (app) => {});
+  app.post('/github/signup', {}, (app) => {});
 };
 
 export default routes;

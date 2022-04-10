@@ -12,4 +12,9 @@ const envConfig = {
   MONGODB_URL: process.env.MONGODB_URL!,
 };
 
+export const {
+  GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET,
+} = process.env;
+
 export default envConfig;
