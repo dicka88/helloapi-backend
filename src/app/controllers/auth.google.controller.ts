@@ -56,7 +56,8 @@ export const googleSignup = async (request: any, reply: FastifyReply) => {
     const payload = loginTicket.getPayload()!;
 
     // payload.sub is unique identifier for user
-    const user = await User.findOne<UserInterface>({ 'oauth.google.id': payload.sub });
+    const user = await User.exists({ 'oauth.google.id': payload.sub });
+    console.log({ user });
 
     if (user) {
       return reply.code(401).send({
@@ -94,7 +95,7 @@ export const googleSignup = async (request: any, reply: FastifyReply) => {
   } catch (err: any) {
     return reply.status(500).send({
       statusCode: 500,
-      error: err.message,
+      message: err.message,
     });
   }
 };
