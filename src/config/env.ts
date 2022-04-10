@@ -13,8 +13,12 @@ const envConfig = {
 };
 
 export const {
+  JWT_SECRET,
+  MONGODB_URL,
   GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET,
+  GITHUB_CLIENT_ID,
+  GITHUB_CLIENT_SECRET,
 } = process.env;
 
 export default envConfig;
