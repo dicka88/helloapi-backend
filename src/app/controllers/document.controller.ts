@@ -54,7 +54,7 @@ export const getPublicDocument = async (request: any, reply: FastifyReply) => {
     const { id } = request.params;
 
     const document = await Document.findOne<DocumentInterface>({
-      id,
+      _id: id,
       userId: null,
     });
 
@@ -193,7 +193,7 @@ export const deleteDocument = async (request: any, reply: FastifyReply) => {
       });
     }
 
-    if (id !== document.userId) {
+    if (id !== document.userId.toString()) {
       return reply.code(401).send({
         code: 401,
         message: 'Unauthorized',
