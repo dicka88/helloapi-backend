@@ -1,5 +1,6 @@
 import { FastifyReply } from 'fastify';
 import { OAuth2Client } from 'google-auth-library';
+import uploader from '../../services/imgbb/uploader';
 import { jwtSign } from '../../utils/jwt';
 
 import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from '../../config/env';
@@ -57,7 +58,6 @@ export const googleSignup = async (request: any, reply: FastifyReply) => {
 
     // payload.sub is unique identifier for user
     const user = await User.exists({ 'oauth.google.id': payload.sub });
-    console.log({ user });
 
     if (user) {
       return reply.code(401).send({
@@ -66,16 +66,21 @@ export const googleSignup = async (request: any, reply: FastifyReply) => {
       });
     }
 
+    // Store picture to imgbb
+    const { data: upload } = await uploader({
+      image: payload.picture!,
+    });
+
     const newUser = await User.create({
       name: payload.name,
       email: null,
-      avatarUrl: payload.picture,
+      avatarUrl: upload.display_url || payload.picture,
       oauth: {
         google: {
           id: payload.sub,
           name: payload.name,
           email: payload.email,
-          avatar: payload.picture,
+          avatar: upload.display_url || payload.picture,
         },
       },
     });

@@ -19,6 +19,7 @@ export const {
   GOOGLE_CLIENT_SECRET,
   GITHUB_CLIENT_ID,
   GITHUB_CLIENT_SECRET,
+  IMGBB_API_KEY,
 } = process.env;
 
 export default envConfig;
