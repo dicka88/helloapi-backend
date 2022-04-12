@@ -11,7 +11,7 @@ import apiRoutes from './routes/api.routes';
 import projectRoutes from './routes/project.routes';
 import documentRoutes from './routes/document.routes';
 
-const build = (props = {}) => {
+const build = async (props = {}) => {
   const app = fastify(props);
 
   // CORS
@@ -25,9 +25,7 @@ const build = (props = {}) => {
   //   url: envConfig.MONGODB_URL,
   // });
 
-  mongoose.connect(envConfig.MONGODB_URL).then(() => {
-    console.log('Mongodb connected');
-  });
+  await mongoose.connect(envConfig.MONGODB_URL);
 
   app.get<Object>('/', async () => ({
     message: 'Its work',
