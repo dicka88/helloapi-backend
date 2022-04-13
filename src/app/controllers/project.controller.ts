@@ -32,6 +32,13 @@ export const getProject = async (request: any, reply: FastifyReply) => {
 
     const project = await Project.findOne({ userId: id, prefixPath });
 
+    if (!project) {
+      return reply.code(404).send({
+        statusCode: 404,
+        message: 'Project is not found',
+      });
+    }
+
     return reply.send(project);
   } catch (err: any) {
     return reply.send({
@@ -65,7 +72,7 @@ export const createProject = async (
       endpoints: [],
     });
 
-    return reply.send(project);
+    return reply.code(201).send(project);
   } catch (err: any) {
     return reply.code(500).send({
       statusCode: 500,
@@ -121,10 +128,17 @@ export const deleteProject = async (
   const { prefixPath } = request.params;
 
   try {
-    await Project.deleteOne({
+    const deleted = await Project.deleteOne({
       userId: id,
       prefixPath,
     });
+
+    if (deleted.deletedCount === 0) {
+      return reply.code(404).send({
+        statusCode: 404,
+        message: 'Project is not found',
+      });
+    }
 
     return reply.send({ statusCode: 200, message: 'Delete project success' });
   } catch (err) {

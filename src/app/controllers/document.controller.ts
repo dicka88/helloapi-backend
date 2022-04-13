@@ -1,4 +1,7 @@
+import { log } from 'console';
 import { FastifyReply } from 'fastify';
+import * as mongoose from 'mongoose';
+
 import { JWTCredential } from '../middlewares/auth.middleware';
 import Document, { DocumentInterface } from '../models/Document';
 
@@ -28,14 +31,14 @@ export const getDocument = async (request: any, reply: FastifyReply) => {
 
     if (!document) {
       return reply.code(404).send({
-        code: 404,
+        statusCode: 404,
         message: "Document doesn't exist",
       });
     }
 
     if (userId !== document.userId.toString()) {
       return reply.code(401).send({
-        code: 401,
+        statusCode: 401,
         message: 'Unauthorized',
       });
     }
@@ -60,7 +63,7 @@ export const getPublicDocument = async (request: any, reply: FastifyReply) => {
 
     if (!document) {
       return reply.code(404).send({
-        code: 404,
+        statusCode: 404,
         message: 'Document is not found',
       });
     }
@@ -87,7 +90,7 @@ export const postDocument = async (request: any, reply: FastifyReply) => {
 
     await document.save();
 
-    return reply.send(document);
+    return reply.code(201).send(document);
   } catch (err: any) {
     return reply.send({
       statusCode: 500,
@@ -108,7 +111,7 @@ export const postPublicDocument = async (request: any, reply: FastifyReply) => {
 
     await document.save();
 
-    return reply.send(document);
+    return reply.code(201).send(document);
   } catch (err: any) {
     return reply.send({
       statusCode: 500,
@@ -118,7 +121,7 @@ export const postPublicDocument = async (request: any, reply: FastifyReply) => {
 };
 
 export const putDocument = async (request: any, reply: FastifyReply) => {
-  const { id } = request.user as JWTCredential;
+  const { id: userId } = request.user as JWTCredential;
   const { id: documentId } = request.params;
   const { content, title } = request.body;
 
@@ -127,14 +130,14 @@ export const putDocument = async (request: any, reply: FastifyReply) => {
 
     if (!document) {
       return reply.code(404).send({
-        code: 404,
+        statusCode: 404,
         message: 'Document not found',
       });
     }
 
-    if (id !== document.userId.toString()) {
+    if (userId !== document.userId.toString()) {
       return reply.code(401).send({
-        code: 401,
+        statusCode: 401,
         message: 'Unauthorized',
       });
     }
@@ -161,7 +164,7 @@ export const putPublicDocument = async (request: any, reply: FastifyReply) => {
 
     if (!document) {
       return reply.code(404).send({
-        code: 404,
+        statusCode: 404,
         message: 'Document not found',
       });
     }
@@ -180,22 +183,29 @@ export const putPublicDocument = async (request: any, reply: FastifyReply) => {
 };
 
 export const deleteDocument = async (request: any, reply: FastifyReply) => {
-  const { id } = request.user as JWTCredential;
   const { id: documentId } = request.params;
+  const { id: userId } = request.user as JWTCredential;
+
+  if (!mongoose.Types.ObjectId.isValid(documentId)) {
+    return reply.code(400).send({
+      statusCode: 400,
+      message: 'Invalid document id',
+    });
+  }
 
   try {
     const document = await Document.findById<DocumentInterface>(documentId);
 
     if (!document) {
       return reply.code(404).send({
-        code: 404,
+        statusCode: 404,
         message: 'Document not found',
       });
     }
 
-    if (id !== document.userId.toString()) {
+    if (userId !== document.userId.toString()) {
       return reply.code(401).send({
-        code: 401,
+        statusCode: 401,
         message: 'Unauthorized',
       });
     }
@@ -203,7 +213,7 @@ export const deleteDocument = async (request: any, reply: FastifyReply) => {
     await document.remove();
 
     return reply.send({
-      code: 200,
+      statusCode: 200,
       message: 'Document deleted',
     });
   } catch (err: any) {

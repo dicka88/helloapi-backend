@@ -16,13 +16,36 @@ const auth = {
 };
 
 const routes: FastifyPluginAsync = async (app): Promise<void> => {
-  app.post('/', auth, postDocument);
+  app.post('/', {
+    ...auth,
+    schema: {
+      body: {
+        type: 'object',
+        required: ['title', 'content'],
+        properties: {
+          title: { type: 'string' },
+          content: { type: 'string' },
+        },
+      },
+    },
+  }, postDocument);
   app.get('/', auth, getAllDocument);
   app.get('/:id', auth, getDocument);
   app.put('/:id', auth, putDocument);
   app.delete('/:id', auth, deleteDocument);
 
-  app.post('/public', {}, postPublicDocument);
+  app.post('/public', {
+    schema: {
+      body: {
+        type: 'object',
+        required: ['title', 'content'],
+        properties: {
+          title: { type: 'string' },
+          content: { type: 'string' },
+        },
+      },
+    },
+  }, postPublicDocument);
   app.get('/public/:id', {}, getPublicDocument);
   app.put('/public/:id', {}, putPublicDocument);
 };

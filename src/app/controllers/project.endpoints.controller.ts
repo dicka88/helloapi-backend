@@ -1,5 +1,6 @@
 import { FastifyReply } from 'fastify';
 import * as _ from 'lodash';
+import { JWTCredential } from '../middlewares/auth.middleware';
 
 import Project, { Endpoint } from '../models/Project';
 
@@ -63,8 +64,11 @@ export const createEndpoint = async (request: any, reply: FastifyReply) => {
         data,
       },
     });
-  } catch (err) {
-    return reply.code(400).send(err);
+  } catch (err: any) {
+    return reply.code(400).send({
+      statusCode: 400,
+      message: err.message,
+    });
   }
 };
 
@@ -73,7 +77,7 @@ export const createEndpoint = async (request: any, reply: FastifyReply) => {
  * Testing: ok
  */
 export const getEndpoint = async (request: any, reply: FastifyReply) => {
-  const { id } = request.user;
+  const { id } = request.user as JWTCredential;
   const { prefixPath, path } = request.params;
 
   try {
@@ -83,7 +87,12 @@ export const getEndpoint = async (request: any, reply: FastifyReply) => {
       'endpoints.path': path,
     });
 
-    if (!project) throw new Error('Endpoint is not found');
+    if (!project) {
+      return reply.code(404).send({
+        statusCode: 404,
+        message: "Endpoint doesn't exist",
+      });
+    }
 
     const endpoint = project.endpoints.find((item: Endpoint) => item.path === path);
 
@@ -113,7 +122,7 @@ export const updateEndpoint = async (request: any, reply: FastifyReply) => {
     data,
   } = request.body;
 
-  // Just update htat user requested
+  // Just update user requested
   const updateFilter = _.pickBy({
     'endpoints.$.name': name,
     'endpoints.$.description': description,
@@ -125,6 +134,19 @@ export const updateEndpoint = async (request: any, reply: FastifyReply) => {
   });
 
   try {
+    const exists = await Project.exists({
+      userId: id,
+      prefixPath,
+      'endpoints.path': path,
+    });
+
+    if (!exists) {
+      return reply.code(404).send({
+        statusCode: 404,
+        message: "Endpoint doesn't exist",
+      });
+    }
+
     await Project.updateOne({
       userId: id,
       prefixPath,
@@ -152,10 +174,28 @@ export const deleteEndpoint = async (request: any, reply: FastifyReply) => {
   const { id } = request.user;
   const { prefixPath, path } = request.params;
 
-  await Project.deleteOne({
+  const exists = await Project.exists({
     userId: id,
     prefixPath,
     'endpoints.path': path,
+  });
+
+  if (!exists) {
+    return reply.code(404).send({
+      statusCode: 404,
+      message: "Endpoint doesn't exist",
+    });
+  }
+
+  await Project.updateOne({
+    userId: id,
+    prefixPath,
+  }, {
+    $pull: {
+      endpoints: {
+        path,
+      },
+    },
   });
 
   return reply.send({

@@ -44,9 +44,42 @@ const routes: FastifyPluginAsync = async (app): Promise<void> => {
   }, updateProject);
   app.delete('/:prefixPath', auth, deleteProject);
 
-  app.post('/:prefixPath/endpoint', auth, createEndpoint);
+  app.post('/:prefixPath/endpoint', {
+    ...auth,
+    schema: {
+      body: {
+        type: 'object',
+        required: ['name', 'path', 'type'],
+        properties: {
+          name: { type: 'string' },
+          description: { type: 'string' },
+          path: { type: 'string' },
+          count: { type: 'number' },
+          type: { type: 'string', enum: ['json', 'faker'] },
+          schema: { type: 'array' },
+          data: { type: 'object' },
+        },
+      },
+    },
+  }, createEndpoint);
   app.get('/:prefixPath/endpoint/:path', auth, getEndpoint);
-  app.put('/:prefixPath/endpoint/:path', auth, updateEndpoint);
+  app.put('/:prefixPath/endpoint/:path', {
+    ...auth,
+    schema: {
+      body: {
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+          description: { type: 'string' },
+          path: { type: 'string' },
+          count: { type: 'number' },
+          type: { type: 'string', enum: ['json', 'faker'] },
+          schema: { type: 'array' },
+          data: { type: 'object' },
+        },
+      },
+    },
+  }, updateEndpoint);
   app.delete('/:prefixPath/endpoint/:path', auth, deleteEndpoint);
 };
 

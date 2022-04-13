@@ -35,9 +35,6 @@ const routes: FastifyPluginAsync = async (app): Promise<void> => {
 
   app.post('/google/signin', {}, googleSignin);
   app.post('/google/signup', {}, googleSignup);
-
-  app.post('/github/signin', {}, (app) => {});
-  app.post('/github/signup', {}, (app) => {});
 };
 
 export default routes;

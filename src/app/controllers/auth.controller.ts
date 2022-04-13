@@ -91,7 +91,7 @@ export const signup = async (request: SignupRequest, replay: FastifyReply) => {
       emailVerifiedAt: newUser.emailVerifiedAt,
     });
 
-    return replay.send({
+    return replay.code(201).send({
       token,
     });
   } catch (err: any) {
