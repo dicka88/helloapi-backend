@@ -2,7 +2,10 @@
   "scripts": {
     "start": "yarn run clean && tsc-watch --onSuccess \"node dist/server.js\"",
     "build": "tsc -p tsconfig.json",
-    "test": "mocha ./dist/tests/**/*.test.js --watch",
+    "test": "mocha ./dist/tests/**/*.test.js",
+    "coverage": "nyc mocha ./dist/tests/**/*.test.js",
+    "test-single": "mocha",
+    "test-single-example": "mocha dist/tests/project.test.js --watch --timeout 20000 ",
     "seed": "node ./dist/seeds/apisSeed.js",
     "lint": "eslint ./src/**/*.ts",
     "clean": "rm -rf dist"
@@ -25,6 +28,7 @@
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
     "mongoose": "^6.2.8",
+    "nyc": "^15.1.0",
     "pino": "^7.9.2",
     "short-hash": "^1.0.0"
   },
@@ -40,6 +44,7 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.4",
     "mocha": "^9.2.2",
+    "ts-jest": "^27.1.4",
     "tsc-watch": "^4.6.2",
     "typescript": "^4.6.3"
   }
