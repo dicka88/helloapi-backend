@@ -22,7 +22,6 @@ export interface Endpoint {
 export interface ProjectInterface extends mongoose.Document {
   id: string,
   userId: string,
-  collaboratos: [string],
   projectName: string,
   projectAvatarUrl: string,
   projectDescription: string,
@@ -94,7 +93,10 @@ const ProjectSchema = new Schema({
     type: Number,
     default: 0,
   },
-  endpoints: [endpointsSchema],
+  endpoints: {
+    type: [endpointsSchema],
+    index: true,
+  },
 }, {
   timestamps: true,
 });

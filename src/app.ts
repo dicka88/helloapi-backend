@@ -4,7 +4,6 @@ import * as mongoose from 'mongoose';
 import fastifyCors from 'fastify-cors';
 
 import envConfig from './config/env';
-
 import userRoutes from './routes/user.routes';
 import authRoutes from './routes/auth.routes';
 import apiRoutes from './routes/api.routes';
@@ -14,7 +13,7 @@ import documentRoutes from './routes/document.routes';
 const build = async (props = {}) => {
   const app = fastify(props);
 
-  // CORS
+  // CORSW
   app.register(fastifyCors, {
     origin: '*',
   });
